@@ -119,6 +119,16 @@ void Gekko::GameSession::AddLocalInput(i32 player, void* input)
 
 GekkoGameEvent** Gekko::GameSession::UpdateSession(i32* count)
 {
+    return UpdateSessionInternal(count, true);
+}
+
+GekkoGameEvent** Gekko::GameSession::FlushCorrections(i32* count)
+{
+    return UpdateSessionInternal(count, false);
+}
+
+GekkoGameEvent** Gekko::GameSession::UpdateSessionInternal(i32* count, bool advance)
+{
     // reset session events
     _msg.session_events.Reset();
 
@@ -152,7 +162,7 @@ GekkoGameEvent** Gekko::GameSession::UpdateSession(i32* count)
         SessionIntegrityCheck();
 
         // then advance the session
-        if (_game_events.AddAdvanceEvent(_sync, false, _runahead_frames > 0)) {
+        if (advance && _game_events.AddAdvanceEvent(_sync, false, _runahead_frames > 0)) {
             if (!_config.limited_saving) {
                 _game_events.AddSaveEvent(_sync, _storage, &_last_saved_frame);
             }
@@ -160,7 +170,7 @@ GekkoGameEvent** Gekko::GameSession::UpdateSession(i32* count)
         }
 
         // run ahead if configured
-        HandleRunahead();
+        if (advance) HandleRunahead();
     }
 
     *count = _game_events.Count();

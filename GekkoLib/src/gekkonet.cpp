@@ -74,6 +74,11 @@ GekkoGameEvent** gekko_update_session(GekkoSession* session, int* count)
     return session->UpdateSession(count);
 }
 
+GekkoGameEvent** gekko_flush_corrections(GekkoSession* session, int* count)
+{
+    return session->FlushCorrections(count);
+}
+
 GekkoSessionEvent** gekko_session_events(GekkoSession* session, int* count)
 {
     return session->Events(count);

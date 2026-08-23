@@ -196,6 +196,8 @@ GEKKONET_API void gekko_add_local_input(GekkoSession* session, int player, void*
 
 GEKKONET_API GekkoGameEvent** gekko_update_session(GekkoSession* session, int* count);
 
+GEKKONET_API GekkoGameEvent** gekko_flush_corrections(GekkoSession* session, int* count);
+
 GEKKONET_API GekkoSessionEvent** gekko_session_events(GekkoSession* session, int* count);
 
 GEKKONET_API float gekko_frames_ahead(GekkoSession* session);

@@ -20,6 +20,7 @@ struct GekkoSession {
     virtual i32 AddActor(GekkoPlayerType type, GekkoNetAddress* addr) = 0;
     virtual void AddLocalInput(i32 player, void* input) = 0;
     virtual GekkoGameEvent** UpdateSession(i32* count) = 0;
+    virtual GekkoGameEvent** FlushCorrections(i32* count) { *count = 0; return nullptr; }
     virtual GekkoSessionEvent** Events(i32* count) = 0;
     virtual f32 FramesAhead() = 0;
     virtual void NetworkStats(i32 player, GekkoNetworkStats* stats) = 0;
@@ -47,6 +48,8 @@ namespace Gekko {
 
         GekkoGameEvent** UpdateSession(i32* count) override;
 
+        GekkoGameEvent** FlushCorrections(i32* count) override;
+
         GekkoSessionEvent** Events(i32* count) override;
 
         f32 FramesAhead() override;
@@ -56,6 +59,8 @@ namespace Gekko {
         void NetworkPoll() override;
 
 	private:
+        GekkoGameEvent** UpdateSessionInternal(i32* count, bool advance);
+
 		void Poll();
 
 		bool AllActorsValid();
