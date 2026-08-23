@@ -258,7 +258,11 @@ void Gekko::GameSession::NetworkStats(i32 player, GekkoNetworkStats* stats)
 
 void Gekko::GameSession::NetworkPoll()
 {
+    // Poll-only startup must progress actor/session synchronization without
+    // emitting Save, Load, Advance, or any other gameplay event.
+    _msg.session_events.Reset();
     Poll();
+    (void)AllActorsValid();
 }
 
 void Gekko::GameSession::HandleSavingConfirmedFrame()
