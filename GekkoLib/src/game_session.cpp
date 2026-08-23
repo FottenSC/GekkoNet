@@ -27,7 +27,8 @@ void Gekko::GameSession::Init(GekkoConfig* config)
     _sync.Init(_config.num_players, _config.input_size);
 
     // setup message system.
-    _msg.Init(_config.num_players, _config.input_size);
+    _msg.Init(_config.num_players, _config.input_size,
+        _config.external_disconnect_detection);
 
     // setup game event system
     _game_events.Init(_config.input_size * _config.num_players);

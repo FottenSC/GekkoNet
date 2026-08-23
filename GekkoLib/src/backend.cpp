@@ -20,6 +20,7 @@ Gekko::MessageSystem::MessageSystem()
     _num_players = 0;
 	_input_size = 0;
     _last_sent_network_check = 0;
+    _external_disconnect_detection = false;
 
 	// gen magic for session
 	std::srand((unsigned int)std::time(nullptr));
@@ -28,10 +29,11 @@ Gekko::MessageSystem::MessageSystem()
     session_events = SessionEventSystem();
 }
 
-void Gekko::MessageSystem::Init(u8 num_players, u32 input_size)
+void Gekko::MessageSystem::Init(u8 num_players, u32 input_size, bool external_disconnect_detection)
 {
     _num_players = num_players;
 	_input_size = input_size;
+    _external_disconnect_detection = external_disconnect_detection;
 
     _net_player_queue.resize(num_players);
 
@@ -101,8 +103,8 @@ void Gekko::MessageSystem::SendPendingOutput(GekkoNetAdapter* host)
 			SendInputsToPeer(peer.get(), host, false);
 		}
 	}
-	// check for disconnects (runs even in spectator sessions with no locals)
-	if (!remotes.empty()) {
+	// Let an embedding transport with an independent receive worker own liveness.
+	if (!_external_disconnect_detection && !remotes.empty()) {
 		HandleTooFarBehindActors(false);
 	}
 
@@ -112,8 +114,8 @@ void Gekko::MessageSystem::SendPendingOutput(GekkoNetAdapter* host)
 			SendInputsToPeer(peer.get(), host, true);
 		}
 	}
-	// check for disconnects
-	if (!spectators.empty()) {
+	// Spectator liveness follows the same configured authority.
+	if (!_external_disconnect_detection && !spectators.empty()) {
 		HandleTooFarBehindActors(true);
 	}
 

@@ -70,6 +70,7 @@ typedef struct GekkoConfig {
     unsigned int state_size;
     bool limited_saving;
     bool desync_detection;
+    bool external_disconnect_detection;
     unsigned int check_distance;
 } GekkoConfig;
 

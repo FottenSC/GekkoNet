@@ -97,7 +97,8 @@ namespace Gekko {
 	public:
 		MessageSystem();
 
-        void Init(u8 num_players, u32 input_size);
+        void Init(u8 num_players, u32 input_size,
+            bool external_disconnect_detection = false);
 
 		void AddInput(Frame input_frame, Handle player, u8 input[], bool remote = false);
 
@@ -203,5 +204,7 @@ namespace Gekko {
         std::vector<u8> _bin_buffer;
 
         u64 _last_sent_network_check;
+
+        bool _external_disconnect_detection;
 	};
 }
