@@ -122,11 +122,31 @@ bool Gekko::GameSession::PrimeLocalDelayPrefix(i32 player, void* inputs, u8 coun
     if (!inputs) return false;
     for (u32 i = 0; i < _msg.locals.size(); i++) {
         if (_msg.locals[i]->handle == player) {
-            return _sync.PrimeLocalDelayPrefix(
-                player, static_cast<u8*>(inputs), count);
+            auto* bytes = static_cast<u8*>(inputs);
+            if (!_sync.PrimeLocalDelayPrefix(player, bytes, count)) {
+                return false;
+            }
+            for (u8 frame = 0; frame < count; ++frame) {
+                _msg.AddInput(frame, player,
+                    bytes + static_cast<u32>(frame) * _config.input_size);
+            }
+            return true;
         }
     }
     return false;
+}
+
+bool Gekko::GameSession::DelayPrefixReady(u8 count)
+{
+    if (count == 0) return true;
+    if (count != GetMinLocalDelay() || _msg.remotes.empty()) return false;
+    const Frame final_prefix_frame = static_cast<Frame>(count) - 1;
+    for (const auto& remote : _msg.remotes) {
+        if (_sync.GetLastReceivedFrom(remote->handle) < final_prefix_frame) {
+            return false;
+        }
+    }
+    return true;
 }
 
 GekkoGameEvent** Gekko::GameSession::UpdateSession(i32* count)

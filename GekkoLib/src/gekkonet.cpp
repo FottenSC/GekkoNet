@@ -75,6 +75,12 @@ bool gekko_prime_local_delay_prefix(
     return session->PrimeLocalDelayPrefix(player, inputs, count);
 }
 
+bool gekko_delay_prefix_ready(
+    GekkoSession* session, unsigned char count)
+{
+    return session->DelayPrefixReady(count);
+}
+
 GekkoGameEvent** gekko_update_session(GekkoSession* session, int* count)
 {
     return session->UpdateSession(count);

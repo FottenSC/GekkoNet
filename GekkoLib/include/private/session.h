@@ -20,6 +20,7 @@ struct GekkoSession {
     virtual i32 AddActor(GekkoPlayerType type, GekkoNetAddress* addr) = 0;
     virtual void AddLocalInput(i32 player, void* input) = 0;
     virtual bool PrimeLocalDelayPrefix(i32 player, void* inputs, u8 count) { return false; }
+    virtual bool DelayPrefixReady(u8 count) { return false; }
     virtual GekkoGameEvent** UpdateSession(i32* count) = 0;
     virtual GekkoGameEvent** FlushCorrections(i32* count) { *count = 0; return nullptr; }
     virtual GekkoSessionEvent** Events(i32* count) = 0;
@@ -48,6 +49,8 @@ namespace Gekko {
         void AddLocalInput(i32 player, void* input) override;
 
         bool PrimeLocalDelayPrefix(i32 player, void* inputs, u8 count) override;
+
+        bool DelayPrefixReady(u8 count) override;
 
         GekkoGameEvent** UpdateSession(i32* count) override;
 
