@@ -37,7 +37,9 @@ namespace Gekko {
 
         bool AddAdvanceEvent(SyncSystem& sync, bool rolling_back, bool running_ahead = false);
 
-        void AddSaveEvent(SyncSystem& sync, StateStorage& storage, Frame* last_saved_frame = nullptr);
+        void AddSaveEvent(SyncSystem& sync, StateStorage& storage,
+            GekkoSaveKind kind = GekkoSaveConfirmed,
+            Frame* last_saved_frame = nullptr);
 
         void AddLoadEvent(SyncSystem& sync, StateStorage& storage);
 

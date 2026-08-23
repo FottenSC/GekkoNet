@@ -101,6 +101,17 @@ float gekko_frames_ahead(GekkoSession* session)
     return session->FramesAhead();
 }
 
+int gekko_confirmed_frame(GekkoSession* session)
+{
+    return session->ConfirmedFrame();
+}
+
+bool gekko_set_forced_rollback_depth(
+    GekkoSession* session, unsigned char depth)
+{
+    return session && session->SetForcedRollbackDepth(depth);
+}
+
 void gekko_network_stats(GekkoSession* session, int player, GekkoNetworkStats* stats)
 {
     session->NetworkStats(player, stats);

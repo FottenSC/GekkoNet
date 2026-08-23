@@ -25,6 +25,8 @@ struct GekkoSession {
     virtual GekkoGameEvent** FlushCorrections(i32* count) { *count = 0; return nullptr; }
     virtual GekkoSessionEvent** Events(i32* count) = 0;
     virtual f32 FramesAhead() = 0;
+    virtual Frame ConfirmedFrame() { return -1; }
+    virtual bool SetForcedRollbackDepth(u8) { return false; }
     virtual void NetworkStats(i32 player, GekkoNetworkStats* stats) = 0;
     virtual void NetworkPoll() = 0;
     virtual ~GekkoSession() = default;
@@ -60,6 +62,10 @@ namespace Gekko {
 
         f32 FramesAhead() override;
 
+        Frame ConfirmedFrame() override;
+
+        bool SetForcedRollbackDepth(u8 depth) override;
+
         void NetworkStats(i32 player, GekkoNetworkStats* stats) override;
 
         void NetworkPoll() override;
@@ -87,7 +93,13 @@ namespace Gekko {
 
 		void HandleRollback();
 
+        void HandleForcedRollback();
+
 		void HandleSavingConfirmedFrame();
+
+        void PromoteConfirmedAnchor();
+
+        bool ConfirmedSpeculativeSaving() const;
 
 		void HandleRunahead();
 
@@ -113,6 +125,8 @@ namespace Gekko {
 		Frame _runahead_start_frame;
 
 		u8 _runahead_frames;
+
+        u8 _forced_rollback_depth;
 
 		std::unique_ptr<u8[]> _disconnected_input;
 
@@ -150,6 +164,8 @@ namespace Gekko {
         GekkoSessionEvent** Events(i32* count) override;
 
         f32 FramesAhead() override;
+
+        Frame ConfirmedFrame() override { return -1; }
 
         void NetworkStats(i32 player, GekkoNetworkStats* stats) override;
 
@@ -203,6 +219,8 @@ namespace Gekko {
         GekkoSessionEvent** Events(i32* count) override;
 
         f32 FramesAhead() override;
+
+        Frame ConfirmedFrame() override { return -1; }
 
         void NetworkStats(i32 player, GekkoNetworkStats* stats) override;
 

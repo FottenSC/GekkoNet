@@ -61,6 +61,18 @@ typedef enum GekkoSessionType {
     GekkoSpectateSession, // session for spectators watching an active player.
 } GekkoSessionType;
 
+typedef enum GekkoSavePolicy {
+    GekkoSaveEveryAdvance = 0,
+    GekkoSaveConfirmedSpeculative = 1
+} GekkoSavePolicy;
+
+typedef enum GekkoSaveKind {
+    GekkoSaveBaseline = 0,
+    GekkoSaveConfirmed = 1,
+    GekkoSaveSpeculativeMidpoint = 2,
+    GekkoSaveSpeculativeEnd = 3
+} GekkoSaveKind;
+
 typedef struct GekkoConfig {
     unsigned char num_players;
     unsigned char max_spectators;
@@ -71,6 +83,7 @@ typedef struct GekkoConfig {
     bool limited_saving;
     bool desync_detection;
     bool external_disconnect_detection;
+    unsigned char save_policy;
     unsigned int check_distance;
 } GekkoConfig;
 
@@ -123,6 +136,7 @@ typedef struct GekkoGameEvent {
         } adv;
         struct GekkoSave {
             int frame;
+            GekkoSaveKind kind;
             unsigned int* checksum;
             unsigned int* state_len;
             unsigned char* state;
@@ -208,6 +222,11 @@ GEKKONET_API GekkoGameEvent** gekko_flush_corrections(GekkoSession* session, int
 GEKKONET_API GekkoSessionEvent** gekko_session_events(GekkoSession* session, int* count);
 
 GEKKONET_API float gekko_frames_ahead(GekkoSession* session);
+
+GEKKONET_API int gekko_confirmed_frame(GekkoSession* session);
+
+GEKKONET_API bool gekko_set_forced_rollback_depth(
+    GekkoSession* session, unsigned char depth);
 
 GEKKONET_API void gekko_network_stats(GekkoSession* session, int player, GekkoNetworkStats* stats);
 

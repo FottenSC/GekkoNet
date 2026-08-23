@@ -195,7 +195,9 @@ bool Gekko::GameEventSystem::AddAdvanceEvent(SyncSystem& sync, bool rolling_back
     return true;
 }
 
-void Gekko::GameEventSystem::AddSaveEvent(SyncSystem& sync, StateStorage& storage, Frame* last_saved_frame)
+void Gekko::GameEventSystem::AddSaveEvent(
+    SyncSystem& sync, StateStorage& storage, GekkoSaveKind kind,
+    Frame* last_saved_frame)
 {
     const Frame frame_to_save = sync.GetCurrentFrame();
 
@@ -208,6 +210,7 @@ void Gekko::GameEventSystem::AddSaveEvent(SyncSystem& sync, StateStorage& storag
     event->type = GekkoSaveEvent;
 
     event->data.save.frame = frame_to_save;
+    event->data.save.kind = kind;
     event->data.save.state = state->state.get();
     event->data.save.checksum = &state->checksum;
     event->data.save.state_len = &state->state_len;

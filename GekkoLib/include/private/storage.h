@@ -22,6 +22,12 @@ namespace Gekko {
 
 		StateEntry* GetState(Frame frame);
 
+        StateEntry* FindLatestAtOrBefore(Frame frame);
+
+        StateEntry* FindLatestBefore(Frame frame);
+
+        void InvalidateFrom(Frame frame);
+
 		StateEntry* GetRunaheadState();
 
 	private:
