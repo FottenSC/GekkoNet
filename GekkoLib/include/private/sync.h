@@ -15,6 +15,8 @@ namespace Gekko {
 
 		void AddLocalInput(Handle player, u8* input);
 
+		bool PrimeLocalDelayPrefix(Handle player, u8* inputs, u8 count);
+
 		void AddRemoteInput(Handle player, u8* input, Frame frame);
 
 		void IncrementFrame();

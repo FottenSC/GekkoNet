@@ -36,6 +36,8 @@ namespace Gekko {
 
 		void AddLocalInput(Frame frame, u8* input);
 
+		bool PrimeLocalDelayPrefix(u8* inputs, u8 count);
+
 		void AddInput(Frame frame, u8* input);
 
 		void SetDelay(u8 delay);

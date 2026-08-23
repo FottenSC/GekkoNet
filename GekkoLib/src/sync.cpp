@@ -35,6 +35,15 @@ void Gekko::SyncSystem::AddLocalInput(Handle player, u8* input)
 	_input_buffers[player].AddLocalInput(_current_frame, input);
 }
 
+bool Gekko::SyncSystem::PrimeLocalDelayPrefix(
+    Handle player, u8* inputs, u8 count)
+{
+    if (player >= _num_players || player < 0) {
+        return false;
+    }
+    return _input_buffers[player].PrimeLocalDelayPrefix(inputs, count);
+}
+
 void Gekko::SyncSystem::AddRemoteInput(Handle player, u8* input, Frame frame)
 {
 	// drop inputs from incorrect handles

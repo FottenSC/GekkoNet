@@ -53,6 +53,18 @@ void Gekko::InputBuffer::AddLocalInput(Frame frame, u8* input)
 	AddInput(frame + _input_delay, input);
 }
 
+bool Gekko::InputBuffer::PrimeLocalDelayPrefix(u8* inputs, u8 count)
+{
+    if (!inputs || count == 0 || count != _input_delay
+        || _last_received_input != GameInput::NULL_FRAME) {
+        return false;
+    }
+    for (u8 frame = 0; frame < count; ++frame) {
+        AddInput(frame, inputs + static_cast<u32>(frame) * _input_size);
+    }
+    return _last_received_input == static_cast<Frame>(count) - 1;
+}
+
 void Gekko::InputBuffer::AddInput(Frame frame, u8* input)
 {
     // only allow sequential input insertion

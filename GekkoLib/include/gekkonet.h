@@ -194,6 +194,9 @@ GEKKONET_API void gekko_set_runahead(GekkoSession* session, unsigned char runahe
 
 GEKKONET_API void gekko_add_local_input(GekkoSession* session, int player, void* input);
 
+GEKKONET_API bool gekko_prime_local_delay_prefix(
+    GekkoSession* session, int player, void* inputs, unsigned char count);
+
 GEKKONET_API GekkoGameEvent** gekko_update_session(GekkoSession* session, int* count);
 
 GEKKONET_API GekkoGameEvent** gekko_flush_corrections(GekkoSession* session, int* count);

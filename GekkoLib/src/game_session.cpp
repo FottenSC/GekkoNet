@@ -117,6 +117,18 @@ void Gekko::GameSession::AddLocalInput(i32 player, void* input)
     }
 }
 
+bool Gekko::GameSession::PrimeLocalDelayPrefix(i32 player, void* inputs, u8 count)
+{
+    if (!inputs) return false;
+    for (u32 i = 0; i < _msg.locals.size(); i++) {
+        if (_msg.locals[i]->handle == player) {
+            return _sync.PrimeLocalDelayPrefix(
+                player, static_cast<u8*>(inputs), count);
+        }
+    }
+    return false;
+}
+
 GekkoGameEvent** Gekko::GameSession::UpdateSession(i32* count)
 {
     return UpdateSessionInternal(count, true);

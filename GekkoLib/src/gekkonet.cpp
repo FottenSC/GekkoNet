@@ -69,6 +69,12 @@ void gekko_add_local_input(GekkoSession* session, int player, void* input)
     session->AddLocalInput(player, input);
 }
 
+bool gekko_prime_local_delay_prefix(
+    GekkoSession* session, int player, void* inputs, unsigned char count)
+{
+    return session->PrimeLocalDelayPrefix(player, inputs, count);
+}
+
 GekkoGameEvent** gekko_update_session(GekkoSession* session, int* count)
 {
     return session->UpdateSession(count);
