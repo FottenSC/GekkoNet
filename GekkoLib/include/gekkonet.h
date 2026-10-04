@@ -219,6 +219,13 @@ GEKKONET_API GekkoGameEvent** gekko_update_session(GekkoSession* session, int* c
 
 GEKKONET_API GekkoGameEvent** gekko_flush_corrections(GekkoSession* session, int* count);
 
+// Embeddings with a native simulation stack must flush corrections at a safe
+// boundary before selecting input. This operation never polls, loads, rewinds,
+// runs ahead, or reconstructs a confirmed save. It returns no events if a
+// baseline/correction is pending or diagnostic rewind modes are configured.
+// Returned forward Save events must be completed before the next game call.
+GEKKONET_API GekkoGameEvent** gekko_advance_forward_only(GekkoSession* session, int* count);
+
 GEKKONET_API GekkoSessionEvent** gekko_session_events(GekkoSession* session, int* count);
 
 GEKKONET_API float gekko_frames_ahead(GekkoSession* session);

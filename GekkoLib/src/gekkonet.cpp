@@ -91,6 +91,11 @@ GekkoGameEvent** gekko_flush_corrections(GekkoSession* session, int* count)
     return session->FlushCorrections(count);
 }
 
+GekkoGameEvent** gekko_advance_forward_only(GekkoSession* session, int* count)
+{
+    return session->AdvanceForwardOnly(count);
+}
+
 GekkoSessionEvent** gekko_session_events(GekkoSession* session, int* count)
 {
     return session->Events(count);

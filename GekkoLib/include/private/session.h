@@ -23,6 +23,7 @@ struct GekkoSession {
     virtual bool DelayPrefixReady(u8 count) { return false; }
     virtual GekkoGameEvent** UpdateSession(i32* count) = 0;
     virtual GekkoGameEvent** FlushCorrections(i32* count) { *count = 0; return nullptr; }
+    virtual GekkoGameEvent** AdvanceForwardOnly(i32* count) { *count = 0; return nullptr; }
     virtual GekkoSessionEvent** Events(i32* count) = 0;
     virtual f32 FramesAhead() = 0;
     virtual Frame ConfirmedFrame() { return -1; }
@@ -57,6 +58,8 @@ namespace Gekko {
         GekkoGameEvent** UpdateSession(i32* count) override;
 
         GekkoGameEvent** FlushCorrections(i32* count) override;
+
+        GekkoGameEvent** AdvanceForwardOnly(i32* count) override;
 
         GekkoSessionEvent** Events(i32* count) override;
 

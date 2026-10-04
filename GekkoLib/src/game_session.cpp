@@ -166,6 +166,39 @@ GekkoGameEvent** Gekko::GameSession::FlushCorrections(i32* count)
     return UpdateSessionInternal(count, false);
 }
 
+GekkoGameEvent** Gekko::GameSession::AdvanceForwardOnly(i32* count)
+{
+    *count = 0;
+    _msg.session_events.Reset();
+    // Do not route this through UpdateSessionInternal: its Poll and confirmed
+    // anchor maintenance can request a Load while the host native worker is
+    // already on the stack. Baseline creation is also a safe-boundary job.
+    if (!_started || _last_saved_frame == GameInput::NULL_FRAME - 1
+        || RollbackPending() || _runahead_frames != 0
+        || _runahead_start_frame != GameInput::NULL_FRAME
+        || _forced_rollback_depth != 0) {
+        return nullptr;
+    }
+    // Submission is allowed here; receipt is deferred to the next safe flush.
+    // Keep outgoing input latency and qualification packet tagging identical
+    // to an ordinary update without calling the receive adapter.
+    if (_host) {
+        SendLocalInputs();
+        _msg.SendPendingOutput(_host);
+    }
+    _game_events.Clear();
+    _game_events.Reset();
+    if (_game_events.AddAdvanceEvent(_sync, false)) {
+        if (!_config.limited_saving) {
+            _game_events.AddSaveEvent(
+                _sync, _storage, GekkoSaveConfirmed, &_last_saved_frame);
+        }
+        _sync.IncrementFrame();
+    }
+    *count = _game_events.Count();
+    return _game_events.Data();
+}
+
 GekkoGameEvent** Gekko::GameSession::UpdateSessionInternal(i32* count, bool advance)
 {
     // reset session events
